@@ -26,7 +26,6 @@ class ProductsController extends AbstractController
         }
        
         return $this->json($product);
-    
     }
 
     /**
@@ -37,16 +36,15 @@ class ProductsController extends AbstractController
     {
         $csv_path = "https://catch-code-challenge.s3-ap-southeast-2.amazonaws.com/products.csv";
 
-        if (($csv_handle = fopen($csv_path, "r")) === FALSE) {
+        if (($csv_handle = fopen($csv_path, "r")) === false) {
             throw new Exception('Cannot open CSV file');
         }
 
         $entityManager = $this->getDoctrine()->getManager();
 
-        $unsetHeader = fgetcsv($csv_handle,2000,",");
+        $unsetHeader = fgetcsv($csv_handle, 2000, ",");
         $i = 0;
-        while (($line = fgetcsv($csv_handle,2000,",")) !== false) {
-
+        while (($line = fgetcsv($csv_handle, 2000, ",")) !== false) {
             $product = new Products();
             $product->setId($line[0]);
             $product->setName($line[1]);
@@ -60,7 +58,7 @@ class ProductsController extends AbstractController
             $i++;
         }
 
-        $entityManager->flush(); 
+        $entityManager->flush();
         $entityManager->clear();
 
         fclose($csv_handle);

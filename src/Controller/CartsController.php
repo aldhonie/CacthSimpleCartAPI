@@ -40,12 +40,9 @@ class CartsController extends AbstractController
             $response->setContent("Cart created successfully");
 
             return $response->send();
-
         } catch (\Throwable $e) {
-
             return $this->json($e->getMessage(), 400);
         }
-
     }
 
     /**
@@ -63,7 +60,6 @@ class CartsController extends AbstractController
                 ->findOneById($id);
 
             return $this->json($cart);
-
         } catch (\Throwable $e) {
             return $this->json($e->getMessage(), 400);
         }
@@ -78,8 +74,7 @@ class CartsController extends AbstractController
     {
         // check cart id is valid
         $cartId = $id;
-        if (!uuid_is_valid($cartId))
-        {
+        if (!uuid_is_valid($cartId)) {
             return $this->json('Invalid or missing Cart id', 400);
         }
 
@@ -87,7 +82,7 @@ class CartsController extends AbstractController
             // Get request $_POST
             $request = Request::createFromGlobals();
             $productId = $request->request->get('productId');
-            $quantity = $request->request->get('quantity',0);
+            $quantity = $request->request->get('quantity', 0);
 
             // Begin Doctrine
             $entityManager = $this->getDoctrine()->getManager();
@@ -108,8 +103,7 @@ class CartsController extends AbstractController
             // Find Products
             $product = $entityManager->getRepository(Products::class)->find($productId);
 
-            if (empty($product) || ($product->getQuantityAvailable() <= $quantity))
-            {
+            if (empty($product) || ($product->getQuantityAvailable() <= $quantity)) {
                 return $this->json('Invalid Products.', 400);
             }
 
@@ -133,25 +127,22 @@ class CartsController extends AbstractController
             $items = $cart->getItems();
             array_push($items, $cartItem->getId());
             $savings = $cart->getSavings() + $product->getRetailPrice();
-            $total = $cart->getSavings() + $product->getRetailPrice();
+            $total = $cart->getTotal() + $product->getSalePrice();
 
             // Set data to Cart
             $cart->setItems($items);
             $cart->setSavings($savings);
-            $cart->setSavingsFormatted("$".number_format($savings/100, 2,".","."));
+            $cart->setSavingsFormatted("$".number_format($savings/100, 2, ".", "."));
             $cart->setTotal($total);
-            $cart->setTotalFormatted("$".number_format($total/100, 2,".","."));
+            $cart->setTotalFormatted("$".number_format($total/100, 2, ".", "."));
 
             // Execute cart
             $entityManager->persist($cart);
             $entityManager->flush();
 
             return $this->json('Successfully updated the cart items', 200);
-
         } catch (\Throwable $e) {
-
-            return $this->json($e->getMessage(),400);
+            return $this->json($e->getMessage(), 400);
         }
     }
-
 }

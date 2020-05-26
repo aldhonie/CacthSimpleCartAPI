@@ -19,9 +19,9 @@ class CartRepository extends ServiceEntityRepository
         parent::__construct($registry, Cart::class);
     }
 
-     /**
-      * @return Cart[] Returns an array of Cart objects
-      */
+    /**
+     * @return Cart[] Returns an array of Cart objects
+     */
 
     public function findOneById($value)
     {
