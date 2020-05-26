@@ -22,7 +22,7 @@ class ProductsController extends AbstractController
         if (!$product) {
             $this->fetchDataProducts();
 
-            return $this->redirectToRoute('products');
+            return $this->redirectToRoute('product');
         }
        
         return $this->json($product);
