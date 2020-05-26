@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Cart;
 use App\Entity\CartItem;
-use App\Entity\Product;
+use App\Entity\Products;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -104,25 +104,26 @@ class CartsController extends AbstractController
                 return $this->json((string) $errors, 400);
             }
 
-            // Product Section
-            // Find Product
-            $product = $entityManager->getRepository(Product::class)->find($productId);
+            // Products Section
+            // Find Products
+            $product = $entityManager->getRepository(Products::class)->find($productId);
 
             if (empty($product) || ($product->getQuantityAvailable() <= $quantity))
             {
-                return $this->json('Invalid Product.', 400);
+                return $this->json('Invalid Products.', 400);
             }
 
-            // Set Availability Product
+            // Set Availability Products
             $quantityAvailable = $product->getQuantityAvailable();
             $product->setQuantityAvailable($quantityAvailable - $quantity);
 
-            // Execute Save Cart Item and Update Product Availability
+            // Execute Save Cart Item and Update Products Availability
             $entityManager->persist($cartItem);
             $entityManager->persist($product);
             $entityManager->flush();
 
-            $logger->info("Product quantity updated. id:".$product->getId());
+            // Logger query have been excute
+            $logger->info("Products quantity updated. id:".$product->getId());
             $logger->info("Cart item updated. id:".$cartItem->getId());
 
             // Cart section

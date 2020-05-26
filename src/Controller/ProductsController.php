@@ -2,22 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
-use Doctrine\ORM\Mapping\Entity;
+use App\Entity\Products;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProductController extends AbstractController
+class ProductsController extends AbstractController
 {
     /**
-     * @Route("/product", name="product")
+     * @Route("/products", name="products")
      */
     public function getProducts()
     {
         $product = $this->getDoctrine()
-            ->getRepository(Product::class)
+            ->getRepository(Products::class)
             ->findAllWithLimit();
 
         if (!$product) {
@@ -31,7 +30,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Route("/fetchDataProduct", name="fetchDataProduct", methods={"GET","HEAD"})
+     * @Route("/fetchDataProducts", name="fetchDataProducts", methods={"GET","HEAD"})
      * @return Response
      */
     public function fetchDataProducts()
@@ -48,7 +47,7 @@ class ProductController extends AbstractController
         $i = 0;
         while (($line = fgetcsv($csv_handle,2000,",")) !== false) {
 
-            $product = new Product();
+            $product = new Products();
             $product->setId($line[0]);
             $product->setName($line[1]);
             $product->setSalePrice($line[2]);
